@@ -239,7 +239,9 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 <tr><td align="center"><code>o</code></td><td align="center">在光标所在行的下一行增添新行，光标位于新行的行首</td></tr>
 <tr><td align="center"><code>O</code></td><td align="center">在光标所在行的上一行增添新行，光标位于新行的行首</td></tr>
 </tbody></table>
-<h3 id="4-编写简单的-shell-程序"><a class="header" href="#4-编写简单的-shell-程序">4. 编写简单的 Shell 程序</a></h3>
+<h2 id="三实验过程"><a class="header" href="#三实验过程">三、实验过程</a></h2>
+<h3 id="1-熟悉常用的-bash-命令"><a class="header" href="#1-熟悉常用的-bash-命令">1. 熟悉常用的 bash 命令</a></h3>
+<h3 id="2-编写简单的-shell-程序"><a class="header" href="#2-编写简单的-shell-程序">2. 编写简单的 Shell 程序</a></h3>
 <p>事实上，在有图形界面时，可以不必在命令行界面下编辑文本。Ubuntu 自带的 GNOME 桌面提供有 <code>gedit</code> 工具，使用方法类似，即在 Shell 中执行 <code>gedit &lt;filename&gt;</code>，即可调出图形化的编辑界面。</p>
 <p>用户亦可安装自己喜欢的编辑器，如 <a href="https://code.visualstudio.com">Visual Studio Code</a>。</p>
 <p><a href="lab/01/./hello.sh">hello.sh</a></p>
@@ -285,15 +287,12 @@ esac  # end of cases
 echo &quot;The end!&quot;
 </code></pre>
 <p>文件最开始的 <code>#!/bin/bash</code> 称为 Shebang。在计算领域中，Shebang（也称为 Hashbang）是一个由井号和叹号构成的字符序列（<code>#!</code>），其出现在文本文件的第一行的前两个字符。在文件中存在 Shebang 的情况下，类 Unix 操作系统的程序加载器会分析 Shebang 后的内容，将这些内容作为解释器指令，并调用该指令，并将载有 Shebang 的文件路径作为该解释器的参数。例如，在终端中输入一个 Shebang 内容为 <code>#!/bin/bash</code> 的文件的路径 <code>path/to/script</code>，则相当于使用 <code>/bin/bash</code> 处的可执行程序解释运行 <code>path/to/script</code> 处的脚本，即 <code>/bin/bash path/to/script</code> 命令。</p>
-<p>也就是说，得益于这种机制，脚本文件也可以像一个可执行程序一样来使用：</p>
-<pre><code class="language-console">$ ./hello.sh
-</code></pre>
-<p><code>./hello.sh</code> 是 <code>hello.sh</code> 这个脚本文件的路径，即当前目录下的 <code>hello.sh</code>。不过，在这之前，还需要为脚本添加可执行的权限：</p>
+<p>也就是说，得益于这种机制，脚本文件也可以像一个可执行程序一样来使用。不过，在这之前，还需要为脚本添加可执行的权限。有些时候，下载的可执行文件缺失了信息，也需要重新为其添加可执行权限。</p>
+<p><code>./hello.sh</code> 是 <code>hello.sh</code> 这个脚本文件的路径，即当前目录下的 <code>hello.sh</code>。</p>
 <pre><code class="language-console">$ chmod +x ./hello.sh
+$ ./hello.sh
 </code></pre>
-<blockquote>
-<p>有些时候，下载的可执行文件缺失了信息，也需要重新为其添加可执行权限。</p>
-</blockquote>
+<p>通过下面的脚本，可以递归地读取目录下的所有文件。</p>
 <p><a href="lab/01/./read-dir.sh">read-dir.sh</a></p>
 <pre><code class="language-bash">#!/bin/bash
 
@@ -313,7 +312,28 @@ read_dir() # 递归输出目录下的所有文件
 
 read_dir $1
 </code></pre>
-<h3 id="5-设计-c-程序"><a class="header" href="#5-设计-c-程序">5. 设计 C 程序</a></h3>
+<p>对这个脚本稍作修改，可以实现拷贝所有文件到另一个路径下。除此之外，也可以使用带 <code>-r</code> 参数的 <code>cp</code> 命令。</p>
+<p><a href="lab/01/./copy-dir.sh">copy-dir.sh</a></p>
+<pre><code class="language-bash">#!/bin/bash
+
+copy_dir() # 递归拷贝目录下的所有文件
+{
+    for file in `ls $1`         # 遍历指定目录下的所有文件
+    do
+        if [ -d $1&quot;/&quot;$file ]    # 判断是目录，则：
+        then
+            mkdir $2&quot;/&quot;$file    # 1. 在目标目录下创建同名目录
+            copy_dir $1&quot;/&quot;$file # 2. 对这个目录执行递归的操作
+        else
+            # 如果不是目录，则拷贝该文件到对应目录下的同名文件
+            cp $1&quot;/&quot;$file $2&quot;/&quot;$file
+        fi
+    done
+}
+
+copy_dir $1 $2
+</code></pre>
+<h3 id="3-设计-c-程序"><a class="header" href="#3-设计-c-程序">3. 设计 C 程序</a></h3>
 <p>不同于 Shell 脚本由 Shell 程序解释执行，使用 C/C++ 编写的程序需要经过<strong>编译</strong>、<strong>链接</strong>之后生成可执行程序，才能运行。</p>
 <p>下面是两个简单的 C/C++ 程序：</p>
 <p><strong>C</strong>: <a href="lab/01/./hello.c">hello.c</a></p>
@@ -407,7 +427,7 @@ total 28
 -rw-r--r-- 1 henry henry  2736 Oct  9 00:47 hello.o
 -rwxr-xr-x 1 henry henry 17168 Oct  9 00:48 main
 </code></pre>
-<h3 id="6-makfile-文件"><a class="header" href="#6-makfile-文件">6. Makfile 文件</a></h3>
+<h3 id="4-makfile-文件"><a class="header" href="#4-makfile-文件">4. Makfile 文件</a></h3>
 <p>使用多文件编程，可以减少编译时消耗的时间。编译时，每个源代码文件被视作一个编译单位。如果将项目中的代码分别放在若干源文件中，那么，未经修改的代码就不需要重新编译，这样就能够节省编译时间。最后只需要将目标文件重新链接起来，即可生成新的可执行程序。</p>
 <p>在一个源文件中，如果需要使用到其他文件中的符号，需要得知关于符号的声明才能通过编译。链接时，则会寻找这些符号的定义。如果没有找到对应符号的定义，则会出现“未解决符号（Unresolved symbols）”或者“未定义引用（Undefined Reference）”的问题。</p>
 <p>如果我们将符号的声明和具体实现放在不同的文件里，就可以方便互相之间的使用。我们将存放声明的文件称为头文件（headers）或者包含（include）文件。这样，负责实现头文件中声明的文件、使用这些符号的其他文件，都只需要包含这个头文件，就能够通过编译。</p>
@@ -549,6 +569,12 @@ The result of f(5) is 10.
 The result of f(6) is 12.
 The result of f(7) is 14.
 </code></pre>
+<p>更多关于 CMake 的介绍：</p>
+<ul>
+<li><a href="https://llvm.org/docs/CMakePrimer.html">https://llvm.org/docs/CMakePrimer.html</a></li>
+</ul>
+<h3 id="5-程序的定时启动"><a class="header" href="#5-程序的定时启动">5. 程序的定时启动</a></h3>
+<h2 id="四实验心得"><a class="header" href="#四实验心得">四、实验心得</a></h2>
 
                     </main>
 
