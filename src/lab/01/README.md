@@ -124,9 +124,11 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 | `o`  | 在光标所在行的下一行增添新行，光标位于新行的行首 |
 | `O`  | 在光标所在行的上一行增添新行，光标位于新行的行首 |
 
+## 三、实验过程
 
+### 1. 熟悉常用的 bash 命令
 
-### 4. 编写简单的 Shell 程序
+### 2. 编写简单的 Shell 程序
 
 事实上，在有图形界面时，可以不必在命令行界面下编辑文本。Ubuntu 自带的 GNOME 桌面提供有 `gedit` 工具，使用方法类似，即在 Shell 中执行 `gedit <filename>`，即可调出图形化的编辑界面。
 
@@ -140,19 +142,16 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 
 文件最开始的 `#!/bin/bash` 称为 Shebang。在计算领域中，Shebang（也称为 Hashbang）是一个由井号和叹号构成的字符序列（`#!`），其出现在文本文件的第一行的前两个字符。在文件中存在 Shebang 的情况下，类 Unix 操作系统的程序加载器会分析 Shebang 后的内容，将这些内容作为解释器指令，并调用该指令，并将载有 Shebang 的文件路径作为该解释器的参数。例如，在终端中输入一个 Shebang 内容为 `#!/bin/bash` 的文件的路径 `path/to/script`，则相当于使用 `/bin/bash` 处的可执行程序解释运行 `path/to/script` 处的脚本，即 `/bin/bash path/to/script` 命令。
 
-也就是说，得益于这种机制，脚本文件也可以像一个可执行程序一样来使用：
+也就是说，得益于这种机制，脚本文件也可以像一个可执行程序一样来使用。不过，在这之前，还需要为脚本添加可执行的权限。有些时候，下载的可执行文件缺失了信息，也需要重新为其添加可执行权限。
 
-```console
-$ ./hello.sh
-```
-
-`./hello.sh` 是 `hello.sh` 这个脚本文件的路径，即当前目录下的 `hello.sh`。不过，在这之前，还需要为脚本添加可执行的权限：
+`./hello.sh` 是 `hello.sh` 这个脚本文件的路径，即当前目录下的 `hello.sh`。
 
 ```console
 $ chmod +x ./hello.sh
+$ ./hello.sh
 ```
 
-> 有些时候，下载的可执行文件缺失了信息，也需要重新为其添加可执行权限。
+通过下面的脚本，可以递归地读取目录下的所有文件。
 
 [read-dir.sh](./read-dir.sh)
 
@@ -160,7 +159,15 @@ $ chmod +x ./hello.sh
 {{#include ./read-dir.sh}}
 ```
 
-### 5. 设计 C 程序
+对这个脚本稍作修改，可以实现拷贝所有文件到另一个路径下。除此之外，也可以使用带 `-r` 参数的 `cp` 命令。
+
+[copy-dir.sh](./copy-dir.sh)
+
+```bash
+{{#include ./copy-dir.sh}}
+```
+
+### 3. 设计 C 程序
 
 不同于 Shell 脚本由 Shell 程序解释执行，使用 C/C++ 编写的程序需要经过**编译**、**链接**之后生成可执行程序，才能运行。
 
@@ -283,7 +290,7 @@ total 28
 -rwxr-xr-x 1 henry henry 17168 Oct  9 00:48 main
 ```
 
-### 6. Makfile 文件
+### 4. Makfile 文件
 
 使用多文件编程，可以减少编译时消耗的时间。编译时，每个源代码文件被视作一个编译单位。如果将项目中的代码分别放在若干源文件中，那么，未经修改的代码就不需要重新编译，这样就能够节省编译时间。最后只需要将目标文件重新链接起来，即可生成新的可执行程序。
 
@@ -430,5 +437,14 @@ The result of f(5) is 10.
 The result of f(6) is 12.
 The result of f(7) is 14.
 ```
+
+更多关于 CMake 的介绍：
+
+- <https://llvm.org/docs/CMakePrimer.html>
+
+
+### 5. 程序的定时启动
+
+## 四、实验心得
 
 
