@@ -163,7 +163,7 @@
 </ul>
 </li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="实验一linux的初步认识"><a class="header" href="#实验一linux的初步认识">实验一：Linux的初步认识</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="实验一linux-的初步认识"><a class="header" href="#实验一linux-的初步认识">实验一：Linux 的初步认识</a></h1>
 <p>实验课时：3学时</p>
 <h2 id="一实验目的"><a class="header" href="#一实验目的">一、实验目的</a></h2>
 <ol>
@@ -183,13 +183,17 @@
 <p>之后进行简单的配置。在设置用户名时，可以选择简单的用户名和密码组合，以便输入。</p>
 <p>首次进入系统后，可以将软件包源配置为易于访问的镜像源。软件包提供方即为软件源，用户可以通过包管理器获得软件源下所提供的软件包。包管理器会在本地存取一份软件源下可用的软件包列表，即软件源缓存。切换软件源后、每次安装或更新软件包前，最好应该执行一次刷新软件源的操作。</p>
 <p>可以在 Ubuntu 桌面应用列表中找到“Software &amp; Updates”应用，更改其中的软件源。Ubuntu 官方下载的镜像安装的系统中包含诸多已有的镜像源。比如，我们可以选择“China”下的“<a href="https://mirrors.ustc.edu.cn/">https://mirrors.ustc.edu.cn/</a>”。确认选择后，点击 Close 关闭应用，会提示用户进行刷新软件包缓存。</p>
-<p>用户也可按 <code>Ctrl</code> + <code>Alt</code> + <code>T</code> 组合键，或在应用列表中打开“终端（Terminal）”，在 Shell 中以超级用户（Super User）权限执行 <code>apt update</code> 命令刷新软件源缓存。</p>
-<p>在首次使用前，还建议执行一次更新操作，即 <code>apt upgrade</code>，命令如下：</p>
-<pre><code class="language-bash">sudo apt upgrade
+<p>用户也可按下 <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> 组合键，或在应用列表中打开“终端（Terminal）”应用，在 Shell 中以超级用户（Super User）权限执行 <code>apt update</code> 命令<strong>刷新软件源缓存</strong>。</p>
+<p>在首次使用前，还建议执行一次<strong>更新软件包</strong>的操作，即 <code>apt upgrade</code>：</p>
+<pre><code class="language-console">$ sudo apt upgrade
 </code></pre>
-<p>（建议）用户默认以普通用户身份登入，使用 <code>sudo</code> 来执行需要提权的操作。更新完成后，可以重启一次客户机中的系统。</p>
+<blockquote>
+<p>用户默认以普通用户身份登入，需要使用 <code>sudo</code> 来执行需要提权的操作。上述代码块中，行首的 <code>$</code> 表示目前处于普通用户模式，在输入命令时无需输入。</p>
+<p>在一次终端会话中首次使用 <code>sudo</code> 时，会要求用户输入自己的密码。需要注意，键入密码不会回显，输入完成后按 <kbd>Enter</kbd> 提交即可。</p>
+</blockquote>
+<p>更新完成后，可以重启一次客户机中的系统。</p>
 <p>接下来安装一些其他开发所需软件包，如 C/C++ 编译器、git、CMake 等。可以通过安装 <code>build-essential</code> 伪包来安装构建所需的诸软件包。</p>
-<pre><code class="language-bash">sudo apt install build-essential git cmake
+<pre><code class="language-console">$ sudo apt install build-essential git cmake
 </code></pre>
 <h3 id="2-常见-bash-命令"><a class="header" href="#2-常见-bash-命令">2. 常见 bash 命令</a></h3>
 <p>默认情况下，打开终端，其中运行的就是 Shell 程序。Shell 程序可以解析用户的输入，从而执行用户的指令，比如对计算机（系统）进行操作、运行其他程序。</p>
@@ -231,7 +235,62 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 <figcaption>图 1：终端输出文本有色彩高亮显示</figcaption>
 </figure>
 <p>可以看到，每行行首有诸如 <code>drwxr-xr-x</code> 这样的字符串，第一个字符表示文件类型，如 <code>d</code> 表示文件为目录、<code>-</code> 表示文件为普通文件、<code>l</code> 表示文件为链接。剩余字符三个一组，分别表示所有者权限、所有者同组用户权限，以及其他用户权限。</p>
-<p>可以使用 <code>chmod</code> 命令修改文件权限。</p>
+<p>可以使用 <code>chmod</code> 命令<strong>修改文件权限</strong>。<code>chmod</code> 命令的常用格式如下：</p>
+<pre><code>chmod [OPTION]... MODE[,MODE]... FILE...
+</code></pre>
+<p>即，按照 <code>MODE</code> 所指定的规则修改某 <code>FILE</code> 的模式位。<code>MODE</code> 的格式为 <code>[ugoa...][[-+=][perms...]]</code>，其中 <code>perms</code> 可以是 <code>rwxXst</code> 之中的字母，如有多个字母，则以逗号 <code>,</code> 间隔。</p>
+<p><code>ugoa</code> 的组合表述该次修改所针对的用户：</p>
+<ul>
+<li><code>u</code>：文件的所有者</li>
+<li><code>g</code>：文件所有者所在组中的其他用户</li>
+<li><code>o</code>：不在文件所有者所在组中的用户，即除了 <code>u</code> 和 <code>g</code> 之外的用户</li>
+<li><code>a</code>：所有用户</li>
+</ul>
+<p>如果不指定 <code>chmod</code> 所针对的用户，则默认为所有用户。</p>
+<p><code>+</code> 运算符表示增加对应的权限，<code>-</code> 运算符表示移除对应的权限，<code>=</code> 将增加对应的权限，而移除其余未指定的权限。</p>
+<p><code>rwxX</code> 分别代表：</p>
+<ul>
+<li><code>r</code>：读（read）权限</li>
+<li><code>w</code>：写（write）权限</li>
+<li><code>x</code>：可执行（execute）权限，或可检索目录权限</li>
+<li><code>X</code>：仅当某用户对该文件拥有 <code>x</code> 权限、或该文件为目录时，才增添 <code>x</code> 权限</li>
+</ul>
+<p>此外，可以使用 <code>ugo</code> 中的一个字母，来代指：</p>
+<ul>
+<li><code>u</code>：文件所有者具有的权限</li>
+<li><code>g</code>：同组其他用户具有的权限</li>
+<li><code>o</code>：非 <code>u</code> 或 <code>g</code> 类用户所具有的权限。</li>
+</ul>
+<p>数码形式的模式使用 1 - 4 个八进制数码来表示，每个数码由 4、2、1 相加而得。省略的数码将被视作前导 0 来处理。第 2 - 4 位八进制数分别表示 <code>u</code>、<code>g</code>、<code>o</code> 的权限，每个数字由 4、2、1 三个数字相加而得。</p>
+<ul>
+<li>4, (100)<sub>2</sub>：代表 <code>r</code> 权限</li>
+<li>2, (010)<sub>2</sub>：代表 <code>w</code> 权限</li>
+<li>1, (001)<sub>2</sub>：代表 <code>x</code> 权限</li>
+</ul>
+<p>比如，<code>chmod a+x file</code> 就是为所有用户添加 <code>file</code> 的可执行权限，其等价于 <code>chmod +111 file</code>。</p>
+<p>或者，要修改一个文件为“当前用户 <code>rwx</code> 权限”“其他用户仅拥有 <code>rx</code> 权限”，则可以使用 <code>chmow 755 file</code>。</p>
+<blockquote>
+<p>可以使用 <code>man chmod</code> 查看关于 <code>chmod</code> 命令的详细说明。</p>
+</blockquote>
+<p>可以使用 <code>useradd</code> 命令<strong>创建用户</strong>。直接键入 <code>useradd</code> 命令，或者添加 <code>-h</code> 选项，可以看到相关帮助信息。</p>
+<p>使用 <code>-m</code> 参数，会为用户在 <code>/home/</code> 目录下创建与用户名同名的用户目录。</p>
+<p>假设新建的用户名为 <code>john</code>：</p>
+<pre><code class="language-console">$ sudo adduser john -m
+</code></pre>
+<p>创建用户成功后，新的用户名会写入在 <code>/etc/passwd</code> 文件中，可以通过 <code>cat</code> 或者 <code>grep</code> 命令检验：</p>
+<pre><code class="language-console">$ grep '^john' /etc/passwd
+john:x:1001:1001::/home/john:/bin/sh
+</code></pre>
+<p>还可以使用 <code>-G</code> 命令将用户添加到某用户组。如 <code>-G sudo</code> 可以使新建的用户能够使用 <code>sudo</code>，即“拥有管理员权限”。</p>
+<pre><code class="language-console">$ sudo useradd -m jason -G sudo
+</code></pre>
+<p>使用 <code>passwd</code> 命令<strong>修改用户密码</strong>。直接键入 <code>passwd</code> 命令可以修改自己的密码，使用 <code>sudo passwd &lt;username&gt;</code> 修改其他用户的密码。</p>
+<pre><code class="language-console">$ sudo passwd jason
+</code></pre>
+<p>首先需要提供用户当前的密码（如有），之后，要输入两次新密码以确认更改。</p>
+<p>可以使用 <code>userdel</code> 命令<strong>删除用户</strong>，附加 <code>-r</code> 参数将同时移除用户的家目录和邮件池。</p>
+<pre><code class="language-console">sudo userdel -r john
+</code></pre>
 <h3 id="3-vi-编辑器"><a class="header" href="#3-vi-编辑器">3. vi 编辑器</a></h3>
 <p>基本使用：</p>
 <ul>
@@ -609,6 +668,41 @@ The result of f(7) is 14.
 <li><a href="https://llvm.org/docs/CMakePrimer.html">https://llvm.org/docs/CMakePrimer.html</a></li>
 </ul>
 <h3 id="6-程序的定时启动"><a class="header" href="#6-程序的定时启动">6. 程序的定时启动</a></h3>
+<p>Linux 上的 <code>cron</code> 守护进程能够在特定时间运行若干任务。使用正确的语法将任务添加进 <code>crontab</code> 文件即能够使 <code>cron</code> 自动运行这些任务。</p>
+<p>计划任务通常为了被用来执行定期备份、系统维护以及其他重复性的操作。</p>
+<p>使用 <code>crontab -e</code> 将开启当前用户的 <code>crontab</code> 文件。该文件中的命令将以当前用户的权限执行。</p>
+<p>如果需要以系统权限执行任务，则使用 <code>sudo crontab -e</code> 打开 root 用户的 <code>crontab</code> 文件。</p>
+<p>执行命令后，会提示选择一个编辑器，这里可以选择 GNU Nano 或者 vim。GNU nano 比较易于使用；vim 的使用方式类似 vi。</p>
+<blockquote>
+<p>如果想要修改使用的编辑器，可以退出后，在 bash 中设置一个临时环境变量 <code>EDITOR</code>，比如：</p>
+<pre><code class="language-console">$ export EDITOR=vim
+</code></pre>
+</blockquote>
+<p>每行以下面的格式声明一个计划任务：</p>
+<pre><code>[minute] [hour] [day of month] [month] [day of week] [command]
+</code></pre>
+<p>在对应的位置使用 <code>*</code> 以匹配任意值。</p>
+<p>比如，下面这个任务将在每天凌晨 0:30 执行：</p>
+<pre><code>29 0 * * * /usr/bin/example
+</code></pre>
+<p>可以使用逗号 <code>,</code> 匹配多个值。下面的这个任务每 15 分钟执行一次。</p>
+<pre><code>0,14,29,44 * * * * /usr/bin/example2
+</code></pre>
+<p>使用连字符 <code>-</code> 指定一个区间。下面的任务每天中午执行，但只限于每年的上半年：</p>
+<pre><code>0 11 * 1-6 * /usr/bin/example3
+</code></pre>
+<blockquote>
+<p>根据 GNU Nano 下方的提示，<code>^O</code> 以保存文件，即，按 <kbd>Ctrl</kbd> + <kbd>O</kbd> 保存文件，再按 Enter 确认保存的文件名。使用 <kbd>Ctrl</kbd> + <kbd>X</kbd> 可以退出 Nano。</p>
+</blockquote>
+<p>保存后，可以看到 <code>crontab: installing new crontab</code> 的信息，这表明成功安装了新的 <code>crontab</code> 文件。</p>
+<blockquote>
+<p>除此之外，也可以使用 <code>at</code> 程序来实现单次的计划任务。</p>
+</blockquote>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/">https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/</a></li>
+<li><a href="https://linuxhint.com/schedule_linux_task/">https://linuxhint.com/schedule_linux_task/</a></li>
+</ul>
 <h2 id="四实验心得"><a class="header" href="#四实验心得">四、实验心得</a></h2>
 
                     </main>
