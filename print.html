@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="lab/index.html"><strong aria-hidden="true">1.</strong> 实验</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="lab/01/index.html"><strong aria-hidden="true">1.1.</strong> 实验一：Linux 的初步认识</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="lab/index.html"><strong aria-hidden="true">1.</strong> 操作系统实验</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="lab/01/index.html"><strong aria-hidden="true">1.1.</strong> 实验一：Linux 的初步认识</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -145,6 +145,10 @@
 <p>《操作系统》课程是一门理论和实践相结合的课程。通过《操作系统》实验教学，可以使学生深入地掌握操作系统的基本概念、基本原理，同时运用《操作系统》提供的方法与技巧对实际问题进行算法设计和程序设计，既能实现与课程同步练习、进一步深化理解和灵活掌握教学内容，又能培养学生程序设计及上机调试的能力。这将为学生《计算机体系结构》、《计算机网络》等后继课程的学习以及今后在相关领域的工作打下坚实的基础。</p>
 <p>《操作系统》课程含有 18 学时的实验内容，要求学生完成 Linux 的初步认识、进程同步、进程通信、页面调度算法模拟等实验，使学生了解和掌握操作系统的基本原理，掌握常用操作系统的使用和一般的管理方法等内容。通过《操作系统》实践环节，培养学生认真分析问题、解决问题的能力，同时培养学生面对问题勤于思考及团队合作的意识，最终使学生达到理论与实践相结合的目的。</p>
 <p>《操作系统》实验教学计划安排 6 个实验项目。由于每个项目都是一个综合训练，仅仅依靠上机三个学时是远远不够的，尤其是实验 6，具有很大的难度，教师可以根据学生的实际情况调整实验内容。这里要求每个同学上实验课前必须做好充分的准备，如问题的分析、数据类型和系统的设计以及程序的编写、初步的调试等等，上机实验课主要是教师和同学们一起讨论和交流，共同解决系统设计和调试中的问题。只有这样才能很好地达到实验教学的目的。</p>
+<h2 id="索引"><a class="header" href="#索引">索引</a></h2>
+<ul>
+<li><a href="lab/./01">实验一：Linux 的初步认识</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="实验一linux的初步认识"><a class="header" href="#实验一linux的初步认识">实验一：Linux的初步认识</a></h1>
 <p>实验课时：3学时</p>
 <h2 id="一实验目的"><a class="header" href="#一实验目的">一、实验目的</a></h2>
@@ -219,8 +223,9 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 <li>按 <kbd>ESC</kbd> 退出插入模式，回到命令模式；</li>
 <li>输入以下命令：
 <ul>
-<li><code>:wq</code> 将改动写入文件并退出；</li>
-<li><code>:q</code> 退出程序；但如果有修改，则需要使用 <code>:q!</code> 来放弃修改。</li>
+<li><code>:q</code> 退出程序。如果进行了修改，则无法直接退出；</li>
+<li><code>:q!</code> 退出程序并放弃修改；</li>
+<li><code>:wq</code> 将改动写入文件并退出。</li>
 </ul>
 </li>
 </ul>
@@ -231,19 +236,20 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 <li>按 <code>dd</code> 可以删除当前所在的行</li>
 </ul>
 <p>要进入插入模式，除了可以按 <code>i</code> 键，还有更多的选择：</p>
-<table><thead><tr><th align="center">键</th><th align="center">功能</th></tr></thead><tbody>
-<tr><td align="center"><code>i</code></td><td align="center">在<strong>光标左侧</strong>输入正文</td></tr>
-<tr><td align="center"><code>a</code></td><td align="center">在<strong>光标右侧</strong>输入正文</td></tr>
-<tr><td align="center"><code>I</code></td><td align="center">在光标所在行的<strong>行首</strong>输入正文</td></tr>
-<tr><td align="center"><code>A</code></td><td align="center">在光标所在行的<strong>行尾</strong>输入正文</td></tr>
-<tr><td align="center"><code>o</code></td><td align="center">在光标所在行的下一行增添新行，光标位于新行的行首</td></tr>
-<tr><td align="center"><code>O</code></td><td align="center">在光标所在行的上一行增添新行，光标位于新行的行首</td></tr>
-</tbody></table>
+<ul>
+<li><code>i</code>: 在<strong>光标左侧</strong>输入正文</li>
+<li><code>a</code>: 在<strong>光标右侧</strong>输入正文</li>
+<li><code>I</code>: 在光标所在行的<strong>行首</strong>输入正文</li>
+<li><code>A</code>: 在光标所在行的<strong>行尾</strong>输入正文</li>
+<li><code>o</code>: 在光标所在行的下一行增添新行，光标位于新行的行首</li>
+<li><code>O</code>: 在光标所在行的上一行增添新行，光标位于新行的行首</li>
+</ul>
+<blockquote>
+<p>事实上，在有图形界面时，可以不必在命令行界面下编辑文本。Ubuntu 自带的 GNOME 桌面提供有 <code>gedit</code> 工具，使用方法类似，即在 Shell 中执行 <code>gedit &lt;filename&gt;</code>，即可打开一个<strong>图形化的编辑界面</strong>。亦可安装自己喜欢的编辑器，如 <a href="https://code.visualstudio.com">Visual Studio Code</a>。</p>
+</blockquote>
 <h2 id="三实验过程"><a class="header" href="#三实验过程">三、实验过程</a></h2>
 <h3 id="1-熟悉常用的-bash-命令"><a class="header" href="#1-熟悉常用的-bash-命令">1. 熟悉常用的 bash 命令</a></h3>
 <h3 id="2-编写简单的-shell-程序"><a class="header" href="#2-编写简单的-shell-程序">2. 编写简单的 Shell 程序</a></h3>
-<p>事实上，在有图形界面时，可以不必在命令行界面下编辑文本。Ubuntu 自带的 GNOME 桌面提供有 <code>gedit</code> 工具，使用方法类似，即在 Shell 中执行 <code>gedit &lt;filename&gt;</code>，即可调出图形化的编辑界面。</p>
-<p>用户亦可安装自己喜欢的编辑器，如 <a href="https://code.visualstudio.com">Visual Studio Code</a>。</p>
 <p><a href="lab/01/./hello.sh">hello.sh</a></p>
 <pre><code class="language-bash">#!/bin/bash
 ls
@@ -336,7 +342,7 @@ copy_dir $1 $2
 <h3 id="3-设计-c-程序"><a class="header" href="#3-设计-c-程序">3. 设计 C 程序</a></h3>
 <p>不同于 Shell 脚本由 Shell 程序解释执行，使用 C/C++ 编写的程序需要经过<strong>编译</strong>、<strong>链接</strong>之后生成可执行程序，才能运行。</p>
 <p>下面是两个简单的 C/C++ 程序：</p>
-<p><strong>C</strong>: <a href="lab/01/./hello.c">hello.c</a></p>
+<p>【C】 <a href="lab/01/./hello.c">hello.c</a></p>
 <pre><code class="language-c">#include &lt;stdio.h&gt;
 
 int main() {
@@ -344,7 +350,7 @@ int main() {
     return 0;
 }
 </code></pre>
-<p><strong>C++</strong>: <a href="lab/01/./hello.cpp">hello.cpp</a></p>
+<p>【C++】 <a href="lab/01/./hello.cpp">hello.cpp</a></p>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 
 int main() {
@@ -435,11 +441,19 @@ total 28
 <p>可以看到，头文件有可能会被多个源代码文件包含。因此，如果在头文件中直接编写了函数的具体定义，就有可能出现“重复定义”的错误。换言之，在链接时，链接器会查找到多个同名符号。如果有需要在头文件中定义符号，可以将其声明为 <code>inline</code>。此外，如果不同编译单元中使用了同名的不同符号，又不希望相互影响，可以将其声明为 <code>static</code>，这样该符号便不会在链接时暴露于外部。</p>
 </blockquote>
 <blockquote>
+<p>存在一个头文件包含了其他头文件的情况，如果某个文件包含了这样的头文件，且同时包含了该头文件所包含的其他头文件，就会造成重复包含的问题。因此，需要保证每个头文件在一个编译单元中仅被包含一次，也就是，需要为头文件添加“头文件保护（Header Guard）”。</p>
+</blockquote>
+<blockquote>
 <p>有时，头文件中的内容十分繁多。由于包含过程只是相当于将头文件整个复制进源代码文件，复杂的头文件也会造成编译时间的大大增加。因此，会有一些技术来减少这部分的编译时间。</p>
 </blockquote>
 <p>假设我们的多文件程序如下所示：</p>
 <p><a href="lab/01/./multi-files/functions.h">functions.h</a></p>
-<pre><code class="language-cpp">int f(int x);
+<pre><code class="language-cpp">#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+
+int f(int x);
+
+#endif
 </code></pre>
 <p><a href="lab/01/./multi-files/functions.c">functions.c</a> </p>
 <pre><code class="language-cpp">#include &quot;functions.h&quot;
@@ -523,6 +537,7 @@ clean:
 <blockquote>
 <p>更多关于 Makefile 的介绍，可以移步 <a href="https://seisman.github.io/how-to-write-makefile/introduction.html">跟我一起写 Makefile（重制版） - 介绍</a>。关于详情可以移步 <a href="https://github.com/seisman/how-to-write-makefile">跟我一起写 Makefile（重制版）在 GitHub 上的仓库</a>。</p>
 </blockquote>
+<h3 id="5-构建管理工具cmake"><a class="header" href="#5-构建管理工具cmake">5. 构建管理工具：CMake</a></h3>
 <p>亦可使用 CMake 这一款构建管理工具。CMake 会生成用于指定构建工具（比如上文中使用的 GNU make）的脚本。通过编写 <code>CMakeLists.txt</code> 文件，可以制定项目的构建方式，并通过 CMake 生成跨平台的构建脚本。</p>
 <p>首先，需要安装 CMake 程序，并将 <code>cmake</code> 命令行工具添加入 PATH 环境变量。可以从包管理器安装 CMake，比如 <code>sudo apt install cmake</code>。</p>
 <p>之后，编写 <a href="lab/01/./multi-files/CMakeLists.txt">CMakeLists.txt</a>：</p>
@@ -573,7 +588,7 @@ The result of f(7) is 14.
 <ul>
 <li><a href="https://llvm.org/docs/CMakePrimer.html">https://llvm.org/docs/CMakePrimer.html</a></li>
 </ul>
-<h3 id="5-程序的定时启动"><a class="header" href="#5-程序的定时启动">5. 程序的定时启动</a></h3>
+<h3 id="6-程序的定时启动"><a class="header" href="#6-程序的定时启动">6. 程序的定时启动</a></h3>
 <h2 id="四实验心得"><a class="header" href="#四实验心得">四、实验心得</a></h2>
 
                     </main>

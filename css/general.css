@@ -90,7 +90,7 @@ h6:target::before {
 .content p { line-height: 1.45em; }
 .content ol { line-height: 1.45em; }
 .content ul { line-height: 1.45em; }
-.content a { text-decoration: none; }
+.content a { text-decoration: none; font-weight: bold;}
 .content a:hover { text-decoration: underline; }
 .content img, .content video { max-width: 100%; }
 .content .header:link,
