@@ -89,7 +89,12 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 -rwxr-xr-x 1 henry henry  925 Apr 24 18:09 proxy.sh
 ```
 
-![添加了高亮的终端输出文本示例](./assets/ls-color-output.svg "终端输出文本有色彩高亮显示")
+<figure>
+
+![终端输出文本有色彩高亮显示](./assets/ls-color-output.svg "添加了高亮的终端输出文本示例")
+
+<figcaption>图 1：终端输出文本有色彩高亮显示</figcaption>
+</figure>
 
 可以看到，每行行首有诸如 `drwxr-xr-x` 这样的字符串，第一个字符表示文件类型，如 `d` 表示文件为目录、`-` 表示文件为普通文件、`l` 表示文件为链接。剩余字符三个一组，分别表示所有者权限、所有者同组用户权限，以及其他用户权限。
 
@@ -210,7 +215,11 @@ $ ./a.out
 Hello!
 ```
 
+<figure>
+
 ![在 bash 中编译 C 语言源代码并运行程序的示意图](./assets/c-compile-and-run.svg "在 bash 中编译 C 语言源代码并运行程序的示意图")
+<figcaption>图 2：在 bash 中编译 C 语言源代码并运行程序的示意图</figcaption>
+</figure>
 
 可以使用带参数的 `-o` 选项，来指定输出文件的路径及名称。
 
@@ -287,7 +296,7 @@ total 28
 -rwxr-xr-x 1 henry henry 17168 Oct  9 00:48 main
 ```
 
-### 4. Makfile 文件
+### 4. Makefile 文件
 
 使用多文件编程，可以减少编译时消耗的时间。编译时，每个源代码文件被视作一个编译单位。如果将项目中的代码分别放在若干源文件中，那么，未经修改的代码就不需要重新编译，这样就能够节省编译时间。最后只需要将目标文件重新链接起来，即可生成新的可执行程序。
 
