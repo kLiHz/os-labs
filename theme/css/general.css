@@ -8,7 +8,7 @@
 }
 
 html {
-    font-family: "Open Sans", sans-serif;
+    font-family: "Times New Roman", "SimSun", serif;
     color: var(--fg);
     background-color: var(--bg);
     text-size-adjust: none;
@@ -20,8 +20,12 @@ body {
     overflow-x: hidden;
 }
 
-code {
-    font-family: "Source Code Pro", Consolas, "Ubuntu Mono", Menlo, "DejaVu Sans Mono", monospace, monospace !important;
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Times New Roman", "SimHei", sans-serif;
+}
+
+kbd, code {
+    font-family: Consolas, "Ubuntu Mono", Menlo, "DejaVu Sans Mono", monospace, monospace !important;
     font-size: 0.875em; /* please adjust the ace font size accordingly in editor.js */
 }
 
