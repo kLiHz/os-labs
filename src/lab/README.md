@@ -11,3 +11,12 @@
 ## 索引
 
 - [实验一：Linux 的初步认识](./01)
+    - [安装过程](./01/index.html#1-安装过程)
+    - [常见 bash 命令](./01/index.html#2-常见-bash-命令)
+    - [vi 编辑器](./01/index.html#3-vi-编辑器)
+    - [编写简单的 Shell 程序](./01/index.html#2-编写简单的-shell-程序)
+    - [设计 C 程序](./01/index.html#3-设计-c-程序)
+    - [Makefile 文件](./01/index.html#4-makefile-文件)
+    - [构建管理工具：CMake](./01/index.html#5-构建管理工具cmake)
+    - [程序的定时启动](./01/index.html#6-程序的定时启动)
+
