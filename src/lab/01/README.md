@@ -1,4 +1,4 @@
-# 实验一：Linux的初步认识
+# 实验一：Linux 的初步认识
 
 实验课时：3学时
 
@@ -29,20 +29,24 @@
 
 可以在 Ubuntu 桌面应用列表中找到“Software & Updates”应用，更改其中的软件源。Ubuntu 官方下载的镜像安装的系统中包含诸多已有的镜像源。比如，我们可以选择“China”下的“<https://mirrors.ustc.edu.cn/>”。确认选择后，点击 Close 关闭应用，会提示用户进行刷新软件包缓存。
 
-用户也可按 `Ctrl` + `Alt` + `T` 组合键，或在应用列表中打开“终端（Terminal）”，在 Shell 中以超级用户（Super User）权限执行 `apt update` 命令刷新软件源缓存。
+用户也可按下 <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> 组合键，或在应用列表中打开“终端（Terminal）”应用，在 Shell 中以超级用户（Super User）权限执行 `apt update` 命令**刷新软件源缓存**。
 
-在首次使用前，还建议执行一次更新操作，即 `apt upgrade`，命令如下：
+在首次使用前，还建议执行一次**更新软件包**的操作，即 `apt upgrade`：
 
-```bash
-sudo apt upgrade
+```console
+$ sudo apt upgrade
 ```
 
-（建议）用户默认以普通用户身份登入，使用 `sudo` 来执行需要提权的操作。更新完成后，可以重启一次客户机中的系统。
+> 用户默认以普通用户身份登入，需要使用 `sudo` 来执行需要提权的操作。上述代码块中，行首的 `$` 表示目前处于普通用户模式，在输入命令时无需输入。
+>
+> 在一次终端会话中首次使用 `sudo` 时，会要求用户输入自己的密码。需要注意，键入密码不会回显，输入完成后按 <kbd>Enter</kbd> 提交即可。
+
+更新完成后，可以重启一次客户机中的系统。
 
 接下来安装一些其他开发所需软件包，如 C/C++ 编译器、git、CMake 等。可以通过安装 `build-essential` 伪包来安装构建所需的诸软件包。
 
-```bash
-sudo apt install build-essential git cmake
+```console
+$ sudo apt install build-essential git cmake
 ```
 
 ### 2. 常见 bash 命令
@@ -98,7 +102,86 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 
 可以看到，每行行首有诸如 `drwxr-xr-x` 这样的字符串，第一个字符表示文件类型，如 `d` 表示文件为目录、`-` 表示文件为普通文件、`l` 表示文件为链接。剩余字符三个一组，分别表示所有者权限、所有者同组用户权限，以及其他用户权限。
 
-可以使用 `chmod` 命令修改文件权限。
+可以使用 `chmod` 命令**修改文件权限**。`chmod` 命令的常用格式如下：
+
+```
+chmod [OPTION]... MODE[,MODE]... FILE...
+```
+
+即，按照 `MODE` 所指定的规则修改某 `FILE` 的模式位。`MODE` 的格式为 `[ugoa...][[-+=][perms...]]`，其中 `perms` 可以是 `rwxXst` 之中的字母，如有多个字母，则以逗号 `,` 间隔。
+
+`ugoa` 的组合表述该次修改所针对的用户：
+
+- `u`：文件的所有者
+- `g`：文件所有者所在组中的其他用户
+- `o`：不在文件所有者所在组中的用户，即除了 `u` 和 `g` 之外的用户
+- `a`：所有用户
+
+如果不指定 `chmod` 所针对的用户，则默认为所有用户。
+
+`+` 运算符表示增加对应的权限，`-` 运算符表示移除对应的权限，`=` 将增加对应的权限，而移除其余未指定的权限。
+
+`rwxX` 分别代表：
+
+- `r`：读（read）权限
+- `w`：写（write）权限
+- `x`：可执行（execute）权限，或可检索目录权限
+- `X`：仅当某用户对该文件拥有 `x` 权限、或该文件为目录时，才增添 `x` 权限
+
+此外，可以使用 `ugo` 中的一个字母，来代指：
+
+- `u`：文件所有者具有的权限
+- `g`：同组其他用户具有的权限
+- `o`：非 `u` 或 `g` 类用户所具有的权限。
+
+数码形式的模式使用 1 - 4 个八进制数码来表示，每个数码由 4、2、1 相加而得。省略的数码将被视作前导 0 来处理。第 2 - 4 位八进制数分别表示 `u`、`g`、`o` 的权限，每个数字由 4、2、1 三个数字相加而得。
+
+- 4, (100)<sub>2</sub>：代表 `r` 权限
+- 2, (010)<sub>2</sub>：代表 `w` 权限
+- 1, (001)<sub>2</sub>：代表 `x` 权限
+
+比如，`chmod a+x file` 就是为所有用户添加 `file` 的可执行权限，其等价于 `chmod +111 file`。
+
+或者，要修改一个文件为“当前用户 `rwx` 权限”“其他用户仅拥有 `rx` 权限”，则可以使用 `chmow 755 file`。
+
+> 可以使用 `man chmod` 查看关于 `chmod` 命令的详细说明。
+
+可以使用 `useradd` 命令**创建用户**。直接键入 `useradd` 命令，或者添加 `-h` 选项，可以看到相关帮助信息。
+
+使用 `-m` 参数，会为用户在 `/home/` 目录下创建与用户名同名的用户目录。
+
+假设新建的用户名为 `john`：
+
+```console
+$ sudo adduser john -m
+```
+
+创建用户成功后，新的用户名会写入在 `/etc/passwd` 文件中，可以通过 `cat` 或者 `grep` 命令检验：
+
+```console
+$ grep '^john' /etc/passwd
+john:x:1001:1001::/home/john:/bin/sh
+```
+
+还可以使用 `-G` 命令将用户添加到某用户组。如 `-G sudo` 可以使新建的用户能够使用 `sudo`，即“拥有管理员权限”。
+
+```console
+$ sudo useradd -m jason -G sudo
+```
+
+使用 `passwd` 命令**修改用户密码**。直接键入 `passwd` 命令可以修改自己的密码，使用 `sudo passwd <username>` 修改其他用户的密码。
+
+```console
+$ sudo passwd jason
+```
+
+首先需要提供用户当前的密码（如有），之后，要输入两次新密码以确认更改。
+
+可以使用 `userdel` 命令**删除用户**，附加 `-r` 参数将同时移除用户的家目录和邮件池。
+
+```console
+sudo userdel -r john
+```
 
 
 ### 3. vi 编辑器
@@ -454,6 +537,59 @@ The result of f(7) is 14.
 
 
 ### 6. 程序的定时启动
+
+Linux 上的 `cron` 守护进程能够在特定时间运行若干任务。使用正确的语法将任务添加进 `crontab` 文件即能够使 `cron` 自动运行这些任务。
+
+计划任务通常为了被用来执行定期备份、系统维护以及其他重复性的操作。
+
+使用 `crontab -e` 将开启当前用户的 `crontab` 文件。该文件中的命令将以当前用户的权限执行。
+
+如果需要以系统权限执行任务，则使用 `sudo crontab -e` 打开 root 用户的 `crontab` 文件。
+
+执行命令后，会提示选择一个编辑器，这里可以选择 GNU Nano 或者 vim。GNU nano 比较易于使用；vim 的使用方式类似 vi。
+
+> 如果想要修改使用的编辑器，可以退出后，在 bash 中设置一个临时环境变量 `EDITOR`，比如：
+>
+> ```console
+> $ export EDITOR=vim
+> ```
+
+每行以下面的格式声明一个计划任务：
+
+```
+[minute] [hour] [day of month] [month] [day of week] [command]
+```
+
+在对应的位置使用 `*` 以匹配任意值。
+
+比如，下面这个任务将在每天凌晨 0:30 执行：
+
+```
+29 0 * * * /usr/bin/example
+```
+
+可以使用逗号 `,` 匹配多个值。下面的这个任务每 15 分钟执行一次。
+
+```
+0,14,29,44 * * * * /usr/bin/example2
+```
+
+使用连字符 `-` 指定一个区间。下面的任务每天中午执行，但只限于每年的上半年：
+
+```
+0 11 * 1-6 * /usr/bin/example3
+```
+
+> 根据 GNU Nano 下方的提示，`^O` 以保存文件，即，按 <kbd>Ctrl</kbd> + <kbd>O</kbd> 保存文件，再按 Enter 确认保存的文件名。使用 <kbd>Ctrl</kbd> + <kbd>X</kbd> 可以退出 Nano。
+
+保存后，可以看到 `crontab: installing new crontab` 的信息，这表明成功安装了新的 `crontab` 文件。
+
+> 除此之外，也可以使用 `at` 程序来实现单次的计划任务。
+
+参考链接：
+
+- <https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/>
+- <https://linuxhint.com/schedule_linux_task/>
 
 ## 四、实验心得
 
