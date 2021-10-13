@@ -2,7 +2,7 @@
 # 作者
 authors = ["henry_23"]
 # 标题
-title = "mdBook 模板"
+title = "OS Labs"
 language = "zh-cn"
 multilingual = false
 src = "src"
