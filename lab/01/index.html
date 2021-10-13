@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>实验一：Linux 的初步认识 - mdBook 模板</title>
+        <title>实验一：Linux 的初步认识 - OS Labs</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -77,7 +77,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../lab/index.html"><strong aria-hidden="true">1.</strong> 操作系统实验</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../lab/01/index.html" class="active"><strong aria-hidden="true">1.1.</strong> 实验一：Linux 的初步认识</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">首页</a></li><li class="chapter-item expanded "><a href="../../lab/index.html"><strong aria-hidden="true">1.</strong> 操作系统实验</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../lab/01/index.html" class="active"><strong aria-hidden="true">1.1.</strong> 实验一：Linux 的初步认识</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -106,7 +106,7 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">mdBook 模板</h1>
+                    <h1 class="menu-title">OS Labs</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
@@ -205,7 +205,10 @@ drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 cwork
 -rw-r--r-- 1 henry henry    0 Oct  7 16:04 hello.txt
 -rwxr-xr-x 1 henry henry  925 Apr 24 18:09 proxy.sh
 </code></pre>
-<p><img src="./assets/ls-color-output.svg" alt="添加了高亮的终端输出文本示例" title="终端输出文本有色彩高亮显示" /></p>
+<figure>
+<p><img src="./assets/ls-color-output.svg" alt="终端输出文本有色彩高亮显示" title="添加了高亮的终端输出文本示例" /></p>
+<figcaption>图 1：终端输出文本有色彩高亮显示</figcaption>
+</figure>
 <p>可以看到，每行行首有诸如 <code>drwxr-xr-x</code> 这样的字符串，第一个字符表示文件类型，如 <code>d</code> 表示文件为目录、<code>-</code> 表示文件为普通文件、<code>l</code> 表示文件为链接。剩余字符三个一组，分别表示所有者权限、所有者同组用户权限，以及其他用户权限。</p>
 <p>可以使用 <code>chmod</code> 命令修改文件权限。</p>
 <h3 id="3-vi-编辑器"><a class="header" href="#3-vi-编辑器">3. vi 编辑器</a></h3>
@@ -370,7 +373,10 @@ total 28
 <pre><code class="language-console">$ ./a.out
 Hello!
 </code></pre>
+<figure>
 <p><img src="./assets/c-compile-and-run.svg" alt="在 bash 中编译 C 语言源代码并运行程序的示意图" title="在 bash 中编译 C 语言源代码并运行程序的示意图" /></p>
+<figcaption>图 2：在 bash 中编译 C 语言源代码并运行程序的示意图</figcaption>
+</figure>
 <p>可以使用带参数的 <code>-o</code> 选项，来指定输出文件的路径及名称。</p>
 <pre><code class="language-console">$ cc hello.c -o main
 $ ls -l
@@ -426,7 +432,7 @@ total 28
 -rw-r--r-- 1 henry henry  2736 Oct  9 00:47 hello.o
 -rwxr-xr-x 1 henry henry 17168 Oct  9 00:48 main
 </code></pre>
-<h3 id="4-makfile-文件"><a class="header" href="#4-makfile-文件">4. Makfile 文件</a></h3>
+<h3 id="4-makefile-文件"><a class="header" href="#4-makefile-文件">4. Makefile 文件</a></h3>
 <p>使用多文件编程，可以减少编译时消耗的时间。编译时，每个源代码文件被视作一个编译单位。如果将项目中的代码分别放在若干源文件中，那么，未经修改的代码就不需要重新编译，这样就能够节省编译时间。最后只需要将目标文件重新链接起来，即可生成新的可执行程序。</p>
 <p>在一个源文件中，如果需要使用到其他文件中的符号，需要得知关于符号的声明才能通过编译。链接时，则会寻找这些符号的定义。如果没有找到对应符号的定义，则会出现“未解决符号（Unresolved symbols）”或者“未定义引用（Undefined Reference）”的问题。</p>
 <p>如果我们将符号的声明和具体实现放在不同的文件里，就可以方便互相之间的使用。我们将存放声明的文件称为头文件（headers）或者包含（include）文件。这样，负责实现头文件中声明的文件、使用这些符号的其他文件，都只需要包含这个头文件，就能够通过编译。</p>
