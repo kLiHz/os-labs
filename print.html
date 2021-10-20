@@ -26,6 +26,8 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/css/custom-style.css">
+        <link rel="stylesheet" href="theme/css/custom-font.css">
         <!-- MathJax -->
         <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
@@ -370,11 +372,13 @@ echo &quot;The end!&quot;
 </code></pre>
 <p>文件最开始的 <code>#!/bin/bash</code> 称为 Shebang。在计算领域中，Shebang（也称为 Hashbang）是一个由井号和叹号构成的字符序列（<code>#!</code>），其出现在文本文件的第一行的前两个字符。在文件中存在 Shebang 的情况下，类 Unix 操作系统的程序加载器会分析 Shebang 后的内容，将这些内容作为解释器指令，并调用该指令，并将载有 Shebang 的文件路径作为该解释器的参数。例如，在终端中输入一个 Shebang 内容为 <code>#!/bin/bash</code> 的文件的路径 <code>path/to/script</code>，则相当于使用 <code>/bin/bash</code> 处的可执行程序解释运行 <code>path/to/script</code> 处的脚本，即 <code>/bin/bash path/to/script</code> 命令。</p>
 <p>也就是说，得益于这种机制，脚本文件也可以像一个可执行程序一样来使用。不过，在这之前，还需要为脚本添加可执行的权限。有些时候，下载的可执行文件缺失了信息，也需要重新为其添加可执行权限。</p>
-<p><code>./hello.sh</code> 是 <code>hello.sh</code> 这个脚本文件的路径，即当前目录下的 <code>hello.sh</code>。</p>
 <pre><code class="language-console">$ chmod +x ./hello.sh
 $ ./hello.sh
 </code></pre>
-<p>通过下面的脚本，可以递归地读取目录下的所有文件。</p>
+<blockquote>
+<p><code>./hello.sh</code> 是 <code>hello.sh</code> 这个脚本文件的路径，即当前目录下的 <code>hello.sh</code>。对于不在 <code>PATH</code> 环境变量的中的路径下面的可执行程序，需要使用路径以指定运行。</p>
+</blockquote>
+<p>通过下面的脚本，可以以递归的方式遍历目录下的所有文件。</p>
 <p><a href="lab/01/./read-dir.sh">read-dir.sh</a></p>
 <pre><code class="language-bash">#!/bin/bash
 
@@ -702,6 +706,8 @@ The result of f(7) is 14.
 <ul>
 <li><a href="https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/">https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/</a></li>
 <li><a href="https://linuxhint.com/schedule_linux_task/">https://linuxhint.com/schedule_linux_task/</a></li>
+<li><a href="https://www.simplified.guide/linux/automatically-run-program-on-startup">https://www.simplified.guide/linux/automatically-run-program-on-startup</a></li>
+<li><a href="https://askubuntu.com/questions/735935/running-command-at-startup-on-crontab">https://askubuntu.com/questions/735935/running-command-at-startup-on-crontab</a></li>
 </ul>
 <h2 id="四实验心得"><a class="header" href="#四实验心得">四、实验心得</a></h2>
 
