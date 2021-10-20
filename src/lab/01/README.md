@@ -229,14 +229,14 @@ sudo userdel -r john
 
 也就是说，得益于这种机制，脚本文件也可以像一个可执行程序一样来使用。不过，在这之前，还需要为脚本添加可执行的权限。有些时候，下载的可执行文件缺失了信息，也需要重新为其添加可执行权限。
 
-`./hello.sh` 是 `hello.sh` 这个脚本文件的路径，即当前目录下的 `hello.sh`。
-
 ```console
 $ chmod +x ./hello.sh
 $ ./hello.sh
 ```
 
-通过下面的脚本，可以递归地读取目录下的所有文件。
+> `./hello.sh` 是 `hello.sh` 这个脚本文件的路径，即当前目录下的 `hello.sh`。对于不在 `PATH` 环境变量的中的路径下面的可执行程序，需要使用路径以指定运行。
+
+通过下面的脚本，可以以递归的方式遍历目录下的所有文件。
 
 [read-dir.sh](./read-dir.sh)
 
@@ -590,6 +590,8 @@ Linux 上的 `cron` 守护进程能够在特定时间运行若干任务。使用
 
 - <https://www.howtogeek.com/101288/how-to-schedule-tasks-on-linux-an-introduction-to-crontab-files/>
 - <https://linuxhint.com/schedule_linux_task/>
+- <https://www.simplified.guide/linux/automatically-run-program-on-startup>
+- <https://askubuntu.com/questions/735935/running-command-at-startup-on-crontab>
 
 ## 四、实验心得
 
