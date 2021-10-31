@@ -1,14 +1,18 @@
-<svg width="720" height="225" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden">
-	<g>
-		<rect x="0" y="0" width="720" height="225" fill="#222A35" />
-		<text font-family="Consolas,Courier New,monospace" font-weight="400" font-size="20"
-            style="white-space:pre">
-            <tspan fill="#16C60C" x="25" y="50">henry@DESKTOP-JORC141</tspan><tspan fill="#CCCCCC">:</tspan><tspan fill="#3B78FF">~</tspan><tspan fill="#CCCCCC">$ ls -l</tspan>
-			<tspan fill="#CCCCCC" x="25" y="75">total 12</tspan>
-			<tspan fill="#CCCCCC" x="25" y="100">drwxr-xr-x 2 henry henry 4096 Jul 18 04:50 </tspan><tspan fill="#3B78FF">clash</tspan>
-			<tspan fill="#CCCCCC" x="25" y="125">drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 </tspan><tspan fill="#3B78FF">cwork</tspan>
-			<tspan fill="#CCCCCC" x="25" y="150">-rw-r--r-- 1 henry henry    0 Oct  7 16:04 hello.txt</tspan>
-			<tspan fill="#CCCCCC" x="25" y="175">-rwxr-xr-x 1 henry henry  925 Apr 24 18:09 </tspan><tspan fill="#16C60C">proxy.sh</tspan>
-		</text>
-	</g>
+<svg width="720" height="225" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		text {
+			font-family: Consolas,"Courier New",monospace;
+			font-weight: 400;
+			font-size: 20px;
+		}
+	</style>
+	<rect x="0" y="0" width="720" height="225" fill="#222A35" />
+	<text>
+		<tspan fill="#16C60C" x="25" y="50">henry@DESKTOP-JORC141</tspan><tspan fill="#CCCCCC">:</tspan><tspan fill="#3B78FF">~</tspan><tspan fill="#CCCCCC">$ ls -l</tspan>
+	</text>
+	<text fill="#CCCCCC" x="25" y="75">total 12</text>
+	<text fill="#CCCCCC" x="25" y="100" style="white-space:pre">drwxr-xr-x 2 henry henry 4096 Jul 18 04:50 <tspan fill="#3B78FF">clash</tspan></text>
+	<text fill="#CCCCCC" x="25" y="125" style="white-space:pre">drwxr-xr-x 6 henry henry 4096 Oct  3 22:31 <tspan fill="#3B78FF">cwork</tspan></text>
+	<text fill="#CCCCCC" x="25" y="150" style="white-space:pre">-rw-r--r-- 1 henry henry    0 Oct  7 16:04 hello.txt</text>
+	<text fill="#CCCCCC" x="25" y="175" style="white-space:pre">-rwxr-xr-x 1 henry henry  925 Apr 24 18:09 <tspan fill="#16C60C">proxy.sh</tspan></text>
 </svg>
