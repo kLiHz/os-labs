@@ -1,0 +1,21 @@
+<svg width="720" height="310" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		text {
+			font-family: Consolas,"Courier New",monospace;
+			font-weight: 400;
+			font-size: 20px;
+            fill: #CCCCCC;
+		}
+	</style>
+	<rect x="0" y="0" width="720" height="310" fill="#222A35" />
+    <text x="25" y="50" ><tspan fill="#16C60C">henry@DESKTOP-JORC141</tspan>:<tspan fill="#3B78FF">~/cwork</tspan>$ g++ fork.cc -o fork</text>
+    <text x="25" y="75" ><tspan fill="#16C60C">henry@DESKTOP-JORC141</tspan>:<tspan fill="#3B78FF">~/cwork</tspan>$ ./fork</text>
+    <text x="25" y="100">printed from parent process 5258</text>
+    <text x="25" y="125">printed from child process 5259</text>
+    <text x="25" y="150"><tspan fill="#16C60C">henry@DESKTOP-JORC141</tspan>:<tspan fill="#3B78FF">~/cwork</tspan>$ ./fork</text>
+    <text x="25" y="175">printed from parent process 5260</text>
+    <text x="25" y="200">printed from child process 5261</text>
+    <text x="25" y="225"><tspan fill="#16C60C">henry@DESKTOP-JORC141</tspan>:<tspan fill="#3B78FF">~/cwork</tspan>$ ./fork</text>
+    <text x="25" y="250">printed from parent process 5262</text>
+    <text x="25" y="275">printed from child process 5263</text>
+</svg>
