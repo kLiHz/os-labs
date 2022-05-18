@@ -1,3 +1,7 @@
 
 # mdBook build directory
 book/
+
+# Build files
+*build*/
+*.out/
