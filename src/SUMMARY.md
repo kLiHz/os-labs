@@ -9,3 +9,9 @@
     - [实验四: 进程通信](./lab/04/README.md)
     - [实验五: 页面置换算法](./lab/05/README.md)
     - [实验六: Socket 网络通信](./lab/06/README.md)
+
+---
+
+- [操作系统课程设计](./lab1/README.md)
+    - [实验一: 多线程同步实验](./lab1/01/README.md)
+    - [实验二: 添加内核模块](./lab1/02/README.md)
