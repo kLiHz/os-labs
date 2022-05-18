@@ -12,6 +12,6 @@
 
 ---
 
-- [操作系统课程设计](./lab1/README.md)
-    - [实验一: 多线程同步实验](./lab1/01/README.md)
-    - [实验二: 添加内核模块](./lab1/02/README.md)
+- [操作系统课程设计](./lab-new/README.md)
+    - [实验一: 多线程同步实验](./lab-new/01/README.md)
+    - [实验二: 添加内核模块](./lab-new/02/README.md)

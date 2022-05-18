@@ -47,12 +47,72 @@ POSIX 信号量 (semaphore) 的 API 可以与 POSIX threads 协同使用, 但并
 [^pthread-programming]: 翻译自 [Linux Tutorial: POSIX Threads](https://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html)
 
 
-[pthreads 入门教程](https://hanbingyan.github.io/2016/03/07/pthread_on_linux/)
 
 ## 实验程序
 
+### 创建线程
 
-程序代码
+pthread.h头文件中包含的几个基本概念及函数：
+(1)pthread_t：. 
+
+线程ID数据类型, 线程ID只在它所属的进程环境中有效
+
+`pthread_create` 函数用于创建一个进程, 函数原型如下 [^pthreads-tutorial]:
+
+```cpp
+int pthread_create(pthread_t *new_thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);
+```
+
+- 若成功创建新的线程, 函数将返回 0;
+- 参数1: 传出参数, 用于保存成功创建线程之后对应的线程id. 
+- 参数2: 传入线程的属性, 通常传 NULL, 表示不修改线程的属性. 
+- 参数3: 传入一个指向函数的指针, 即待创建线程所执行函数的入口地址, 函数执行完毕, 则线程结束. 
+- 参数4: 传入调用线程所执行函数时所使用的参数. 
+
+调用 `pthread_join` 的线程将被阻塞, 直到对应线程终止. 
+
+```cpp
+int pthread_join(pthread_t thread, void **rval_ptr);
+```
+
+- 返回值:成功返回 0, 失败返回错误号
+- 参数1: 回收线程的tid
+- 参数2: 接收退出线程传递出的返回值
+
+线程以不同的方法终止时, 通过 `pthread_join` 得到的终止状态是不同的, 总结如下:
+
+- 如果 thread 线程通过 return 返回, `rval_ptr` 所指向的单元里存放的是 thread 线程函数的返回值. 
+- 如果 thread 线程被别的线程调用 `pthread_cancel` 异常终止掉, `rval_ptr` 所指向的单元里存放的是常量 `PTHREAD_CANCELED`. 
+- 如果 thread 线程是自己调用 `pthread_exit` 终止的, `rval_ptr` 所指向的单元存放的是传给 `pthread_exit` 的参数. 
+
+如果 thread 线程的终止状态不感兴趣, 可以传 `NULL` 给 `rval_ptr` 参数. 
+
+简单的示例程序 [thread_creation.c](./thread_creation.c): 
+
+```cpp
+{{#include ./thread_creation.c}}
+```
+
+需要注意, 编译文件时需要使用链接选项 `-lpthread`:
+
+```console
+$ cc thread_creation.c -lpthread
+$ ./a.out
+Thread 1 
+Thread 2 
+```
+
+进程的结束一般有以下几种情况.
+
+- 线程的任务完成, 即线程所执行的函数正常 `return`;
+- 线程调用了 `pthread_exit` 函数;
+- 其他线程调用 `pthread_cancel` 结束这个线程;
+- 进程调用 `exec()` 或 `exit()`; 
+- `main` 函数先于线程执行结束, 且 `main` 没有等待线程完成任务.
+
+需要注意, 一个线程结束, 并不意味着它的所有信息都已经消失.
+
+### 线程互斥锁
 
 ## 实验截图及结果分析
 
@@ -69,3 +129,7 @@ POSIX 信号量 (semaphore) 的 API 可以与 POSIX threads 协同使用, 但并
 [pthreads]: https://en.wikipedia.org/wiki/Pthreads "pthreads - Wikipedia"
 
 [posix]: https://en.wikipedia.org/wiki/POSIX "POSIX - Wikipedia"
+
+[^pthreads-tutorial]: 摘自 [pthreads 入门教程](https://hanbingyan.github.io/2016/03/07/pthread_on_linux/)
+
+[C 语言 pthread 多线程并行程序设计入门教学与范例 - G. T. Wang](https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/)
