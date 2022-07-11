@@ -15,3 +15,7 @@
 - [操作系统课程设计](./lab-new/README.md)
     - [实验一: 多线程同步实验](./lab-new/01/README.md)
     - [实验二: 添加内核模块](./lab-new/02/README.md)
+    - [实验三: 打印进程树](./lab-new/03/README.md)
+    - [实验四: 添加系统调用](./lab-new/04/README.md)
+    - [实验五: 虚拟文件系统](./lab-new/05/README.md)
+    - [实验六: 块设备驱动程序](./lab-new/06/README.md)
