@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html lang="zh-cn" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>实验一: 多线程同步实验 - OS Labs</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../theme/css/custom-style.css">
+        <link rel="stylesheet" href="../../theme/css/custom-font.css">
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">首页</a></li><li class="chapter-item expanded "><a href="../../lab/index.html"><strong aria-hidden="true">1.</strong> 操作系统实验</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../lab/01/index.html"><strong aria-hidden="true">1.1.</strong> 实验一: Linux 的初步认识</a></li><li class="chapter-item expanded "><a href="../../lab/02/index.html"><strong aria-hidden="true">1.2.</strong> 实验二: 进程的初步认识</a></li><li class="chapter-item expanded "><a href="../../lab/03/index.html"><strong aria-hidden="true">1.3.</strong> 实验三: 经典进程同步问题</a></li><li class="chapter-item expanded "><a href="../../lab/04/index.html"><strong aria-hidden="true">1.4.</strong> 实验四: 进程通信</a></li><li class="chapter-item expanded "><a href="../../lab/05/index.html"><strong aria-hidden="true">1.5.</strong> 实验五: 页面置换算法</a></li><li class="chapter-item expanded "><a href="../../lab/06/index.html"><strong aria-hidden="true">1.6.</strong> 实验六: Socket 网络通信</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../../lab-new/index.html"><strong aria-hidden="true">2.</strong> 操作系统课程设计</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../lab-new/01/index.html" class="active"><strong aria-hidden="true">2.1.</strong> 实验一: 多线程同步实验</a></li><li class="chapter-item expanded "><a href="../../lab-new/02/index.html"><strong aria-hidden="true">2.2.</strong> 实验二: 添加内核模块</a></li><li class="chapter-item expanded "><a href="../../lab-new/03/index.html"><strong aria-hidden="true">2.3.</strong> 实验三: 打印进程树</a></li><li class="chapter-item expanded "><a href="../../lab-new/04/index.html"><strong aria-hidden="true">2.4.</strong> 实验四: 添加系统调用</a></li><li class="chapter-item expanded "><a href="../../lab-new/05/index.html"><strong aria-hidden="true">2.5.</strong> 实验五: 虚拟文件系统</a></li><li class="chapter-item expanded "><a href="../../lab-new/06/index.html"><strong aria-hidden="true">2.6.</strong> 实验六: 块设备驱动程序</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">OS Labs</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/tsagaanbar/os-labs" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/tsagaanbar/os-labs/edit/main/src/lab-new/01/README.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="实验一-多线程同步实验"><a class="header" href="#实验一-多线程同步实验">实验一 多线程同步实验</a></h1>
+<h2 id="实验目的"><a class="header" href="#实验目的">实验目的</a></h2>
+<ol>
+<li>掌握线程的概念及创建方法</li>
+<li>掌握线程互斥锁及条件变量同步机制</li>
+<li>掌握 POSIX 信号量机制</li>
+<li>掌握生产者消费者原理</li>
+<li>设计程序, 两种方法实现多线程生产者消费者同步问题</li>
+</ol>
+<p>(备注: 至少包括两个生产者线程, 两个消费者线程. 各生产者线程放的数据需要不同, 例如: 生产者 1 放 1, 2, 3, 4, 生产者 2 放 -2, -4, -6, 或者 3, 6, 9, 12. 备注不写入实验报告)</p>
+<h2 id="实验原理"><a class="header" href="#实验原理">实验原理</a></h2>
+<h3 id="线程的概念"><a class="header" href="#线程的概念">线程的概念</a></h3>
+<p>线程 (<a href="https://en.wikipedia.org/wiki/Thread_(computing)" title="Thread (computing) - Wikipedia">thread</a>) 是操作系统能够进行运算调度的最小单位. 它被包含在进程之中, 是进程中的实际运作单位. 一个线程指的是进程中一个单一顺序的控制流, 一个进程中可以并发多个线程, 每条线程并行执行不同的任务. </p>
+<p>线程是独立调度和分派的基本单位. 同一进程中的多个线程将共享该进程中的全部系统资源, 如虚拟地址空间, 文件描述符和信号处理等等. 但同一进程中的多个线程有各自的调用栈 (call stack), 自己的寄存器环境 (register context), 自己的线程本地存储 (thread-local storage).</p>
+<p>一个进程可以有很多线程, 每个线程并行执行不同的任务. 在多核或多 CPU, 或支持 Hyper-threading 的 CPU 上使用多线程程序设计的好处是显而易见, 即提高了程序的执行吞吐率. 在单 CPU 单核的计算机上, 使用多线程技术, 也可以把进程中负责 I/O 处理, 人机交互而常被阻塞的部分与密集计算的部分分开来执行, 编写专门的线程执行密集计算, 从而提高了程序的执行效率. </p>
+<h3 id="pthreads-和-libpthread"><a class="header" href="#pthreads-和-libpthread">pthreads 和 libpthread</a></h3>
+<p><a href="https://en.wikipedia.org/wiki/Pthreads" title="pthreads - Wikipedia">POSIX threads</a>, 通常以 <strong>pthreads</strong> 为人所知, 是一种独立于编程语言的线程执行模型 (或者称 &quot;并发模型&quot;). 它使得程序可以在同一时间控制多个不同的工作流. 每个工作流就是一个 &quot;线程 (<a href="https://en.wikipedia.org/wiki/Thread_(computing)" title="Thread (computing) - Wikipedia">thread</a>)&quot;, 而程序对于这些工作流的创建和控制, 则是通过对 <a href="https://en.wikipedia.org/wiki/POSIX" title="POSIX - Wikipedia">POSIX</a> Threads API 的调用来实现. 通常, POSIX 兼容的类 Unix 系统都会提供这些 API, 这些系统通常会包含一个 <strong>libpthread</strong> 库. <sup class="footnote-reference"><a href="#pthreads-wikipedia">1</a></sup></p>
+<p><strong>pthreads</strong> 定义了一系列 C 语言的类型, 函数和常量, 在 <code>pthread.h</code> 和对应的线程库中实现. 有大约 100 中线程相关的过程 (procedure), 均以 <code>pthred_</code> 开头, 并且可以分为以下几组:</p>
+<ul>
+<li>线程管理 -- 线程的创建, 收集 (join) 等等.</li>
+<li>互斥量</li>
+<li>条件变量</li>
+<li>使用读写锁实现的线程同步</li>
+</ul>
+<p>POSIX 信号量 (semaphore) 的 API 可以与 POSIX threads 协同使用, 但并不在线程的标准之中. 这些和信号量相关的函数通常以 <code>sem_</code> 开头, 而非 <code>pthread_</code>.</p>
+<p>下面是一些关于线程的概念 <sup class="footnote-reference"><a href="#pthread-programming">2</a></sup>:</p>
+<ul>
+<li>线程并不会保存自己已经创建的线程, 也不知道创建自己的线程;</li>
+<li>同一进程内的线程共享相同的地址空间;</li>
+<li>每个线程都有独立的线程 ID, 寄存器环境, 调用栈, 优先级等等;</li>
+<li>pthread 库函数返回 0 表示成功.</li>
+</ul>
+<div class="footnote-definition" id="pthreads-wikipedia"><sup class="footnote-definition-label">1</sup>
+<p>翻译自 <a href="https://en.wikipedia.org/wiki/Pthreads" title="pthreads - Wikipedia">Wikipedia 上的 &quot;pthreads&quot; 词条</a></p>
+</div>
+<div class="footnote-definition" id="pthread-programming"><sup class="footnote-definition-label">2</sup>
+<p>翻译自 <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html">Linux Tutorial: POSIX Threads</a></p>
+</div>
+<h2 id="实验程序"><a class="header" href="#实验程序">实验程序</a></h2>
+<h3 id="创建线程"><a class="header" href="#创建线程">创建线程</a></h3>
+<p>pthread.h头文件中包含的几个基本概念及函数：
+(1)pthread_t：. </p>
+<p>线程ID数据类型, 线程ID只在它所属的进程环境中有效</p>
+<p><code>pthread_create</code> 函数用于创建一个进程, 函数原型如下 <sup class="footnote-reference"><a href="#pthreads-tutorial">3</a></sup>:</p>
+<pre><code class="language-cpp">int pthread_create(pthread_t *new_thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);
+</code></pre>
+<ul>
+<li>若成功创建新的线程, 函数将返回 0;</li>
+<li>参数1: 传出参数, 用于保存成功创建线程之后对应的线程id. </li>
+<li>参数2: 传入线程的属性, 通常传 NULL, 表示不修改线程的属性. </li>
+<li>参数3: 传入一个指向函数的指针, 即待创建线程所执行函数的入口地址, 函数执行完毕, 则线程结束. </li>
+<li>参数4: 传入调用线程所执行函数时所使用的参数. </li>
+</ul>
+<p>调用 <code>pthread_join</code> 的线程将被阻塞, 直到对应线程终止. </p>
+<pre><code class="language-cpp">int pthread_join(pthread_t thread, void **rval_ptr);
+</code></pre>
+<ul>
+<li>返回值:成功返回 0, 失败返回错误号</li>
+<li>参数1: 回收线程的tid</li>
+<li>参数2: 接收退出线程传递出的返回值</li>
+</ul>
+<p>线程以不同的方法终止时, 通过 <code>pthread_join</code> 得到的终止状态是不同的, 总结如下:</p>
+<ul>
+<li>如果 thread 线程通过 return 返回, <code>rval_ptr</code> 所指向的单元里存放的是 thread 线程函数的返回值. </li>
+<li>如果 thread 线程被别的线程调用 <code>pthread_cancel</code> 异常终止掉, <code>rval_ptr</code> 所指向的单元里存放的是常量 <code>PTHREAD_CANCELED</code>. </li>
+<li>如果 thread 线程是自己调用 <code>pthread_exit</code> 终止的, <code>rval_ptr</code> 所指向的单元存放的是传给 <code>pthread_exit</code> 的参数. </li>
+</ul>
+<p>如果 thread 线程的终止状态不感兴趣, 可以传 <code>NULL</code> 给 <code>rval_ptr</code> 参数. </p>
+<p>简单的示例程序 <a href="./thread_creation.c">thread_creation.c</a>: </p>
+<pre><code class="language-cpp">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void *print_message_function(void *ptr) {
+  printf(&quot;%s \n&quot;, (char *)ptr);
+  return 0;
+}
+
+int main() {
+  const char *message1 = &quot;Thread 1&quot;;
+  const char *message2 = &quot;Thread 2&quot;;
+  
+  pthread_t thread1, thread2;
+
+  pthread_create(&amp;thread1, NULL, print_message_function, (void *)message1);
+  pthread_create(&amp;thread2, NULL, print_message_function, (void *)message2);
+
+  pthread_join(thread1, NULL);
+  pthread_join(thread2, NULL);
+
+  exit(0);
+}
+</code></pre>
+<p>需要注意, 编译文件时需要使用链接选项 <code>-lpthread</code>:</p>
+<pre><code class="language-console">$ cc thread_creation.c -lpthread
+$ ./a.out
+Thread 1 
+Thread 2 
+</code></pre>
+<p>进程的结束一般有以下几种情况.</p>
+<ul>
+<li>线程的任务完成, 即线程所执行的函数正常 <code>return</code>;</li>
+<li>线程调用了 <code>pthread_exit</code> 函数;</li>
+<li>其他线程调用 <code>pthread_cancel</code> 结束这个线程;</li>
+<li>进程调用 <code>exec()</code> 或 <code>exit()</code>; </li>
+<li><code>main</code> 函数先于线程执行结束, 且 <code>main</code> 没有等待线程完成任务.</li>
+</ul>
+<p>需要注意, 一个线程结束, 并不意味着它的所有信息都已经消失.</p>
+<h3 id="线程互斥锁"><a class="header" href="#线程互斥锁">线程互斥锁</a></h3>
+<h2 id="实验截图及结果分析"><a class="header" href="#实验截图及结果分析">实验截图及结果分析</a></h2>
+<h2 id="实验心得"><a class="header" href="#实验心得">实验心得</a></h2>
+<div class="footnote-definition" id="pthreads-tutorial"><sup class="footnote-definition-label">3</sup>
+<p>摘自 <a href="https://hanbingyan.github.io/2016/03/07/pthread_on_linux/">pthreads 入门教程</a></p>
+</div>
+<p><a href="https://blog.gtwang.org/programming/pthread-multithreading-programming-in-c-tutorial/">C 语言 pthread 多线程并行程序设计入门教学与范例 - G. T. Wang</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../lab-new/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../lab-new/02/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../lab-new/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../lab-new/02/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
