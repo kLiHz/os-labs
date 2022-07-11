@@ -40,6 +40,20 @@ Arch Linux:
 sudo pacman -S gcc kmod
 ```
 
+### 查看内核模块
+
+使用 `lsmod` 命令查看内核当前已经加载的模块.
+
+```
+sudo lsmod
+```
+
+内核模块都存储在 `/proc/modules` 文件中, 可以通过以下命令查看文件内容.
+
+```
+sudo cat /proc/modules
+```
+
 ### Linux 内核头文件
 
 在开始构建之前, 需要确保安装了所使用内核对应的头文件.
@@ -48,7 +62,7 @@ sudo pacman -S gcc kmod
 
 首先建立一个测试目录, 如 `~/dev/kernel/hello1/`.
 
-并在目录下新建一个 C 程序源文件, 如 `hello1.c`.
+并在目录下新建一个 C 程序源文件, 如 [`hello-1.c`](./assets/hello/hello-1.c).
 
 其中至少包含两个函数:
 
@@ -58,54 +72,129 @@ sudo pacman -S gcc kmod
 ```cpp
 // hello1.c
 
-{{#include assets/hello1/hello1.c}}
+{{#include assets/hello/hello-1.c}}
 ```
 
 之后建立一个 `Makefile` 用于构建.
 
-内核使用 `kbuild` 构建系统配置编译, `kbuild` 构建系统可用于编译自定义的内核模块.
+Linux 内核使用 `kbuild` 构建系统, `kbuild` 构建系统也可用于编译自定义的内核模块.
 
-编译过程首先会到内核源码目录下, 读取顶层的 `Makefile` 文件, 然后再编译模块源码, 连接生成的内核模块后缀为 `.ko`.
+编译过程首先会到内核源码目录下, 读取顶层的 `Makefile` 文件, 然后再编译模块源码, 生成的内核模块后缀为 `.ko`.
 
-内核 Makefile 提供的 obj-m 表示对象文件 (object files) 编译成可加载的内核模块.
+Makefile 提供的 `obj-m` 表示对象文件 (object files) 编译成可加载的内核模块.
 
 `hello-1.c` 的 `Makefile` 文件 `obj-m += hello-1.o` 表明有一个模块要从目标文件 `hello-1.o` 建立, `kbuild` 从该目标文件建立内核模块 `hello-1.ko`.
 
 ```
-{{#include assets/hello1/Makefile}}
+{{#include assets/hello/Makefile}}
 ```
 
+> `Makefile` 中的缩进为 Tab 而非空格.
+
+- `PWD := $(CURDIR)` 获得当前目录路径并存储在变量中;
+- `-C` 是表示进入指定目录下, 执行对应目录下的 Makefile, 目的是为了找到并使用内核的顶层 Makefile;
+- `M` 不是 `make` 命令的选项, 而是 Makefile 中使用的变量, 目的是为了使 Makefile 在试图建立模块目标前, 回到模块源码目录;
+- `modules` 是 Makefile 中的目标;
+- `uname` 命令用于显示当前操作系统名称. 传递 `-r` 选项则显示操作系统的发行版号
+- `obj-m` 表示把 `hello.o` 文件作为 "模块" 进行编译, 不会编译到内核, 但是会生成一个独立的 "`hello.ko`" 文件;
+- `obj-y` 表示把 `hello.o` 文件编译进内核.
+
+之后运行 `make` 命令进行构建.
+
+![Building hello1](./assets/hello1-build.png)
+
+若不出问题, 则可以接下来可以在目录下看到编译得到的模块文件 `hello1.ko`. 可以用如下命令查看模块的信息:
+
+```
+modinfo hello1.ko
+```
+
+![hello1 info](./assets/hello1-info.png)
 
 
+### 加载模块
+
+超级用户可以通过 `insmod` 和 `rmmod` 命令显式地 (手动) 将模块载入内核或从内核中将它卸载.
+
+尝试载入上一步构建的 `hello-1` 模块:
+
+```
+sudo insmod hello-1.ko
+```
+
+之后则可以通过 `lsmod` 确认已经载入内核模块:
+
+```
+sudo lsmod | grep 'hello'
+```
+
+可以通过 `rmmod` 命令卸载模块:
+
+```
+sudo rmmod hello_1
+```
+
+> 模块名中的连字符 (dash) 会被替换为下划线. 如 `hello-1` 对应变换为 `hello_1`.
+
+可以在日志中查看如上发生的事情 (也可以使用 `dmesg` 命令).
+
+```
+sudo journalctl --since "1 hour ago" | grep kernel
+```
+
+![logs of loading and unloading hello1](./assets/hello1-logs.png)
+
+### 注意事项
+
+一般来说, `init_module()` 函数要么用来向内核中注册某个服务的 handler, 要么替换掉某个内核函数的代码 (通常是做一些额外的事情, 然后再调用原来的函数). 而 `cleanup_module()` 函数则应该撤销 `init_module()` 所做的任何修改, 以保证模块可以被安全地卸载.
+
+每个内核模块也都应该包含 `<linux/module.h>` 头文件. 引入 `<linux/kernel.h>` 只是为了 `pr_alert()` 日志等级的宏展开.
+
+1. 关于代码风格: 内核编程的习惯, 是使用 Tab 缩进, 而不是空格.
+2. 引入用于输出的宏: 最初的时候, 有 `printk` 用于输出信息, 通常跟随一个优先级, 如 `KERN_INFO` 或者 `KERN_DEBUG`. 后来则可以使用宏, 以一种简化的形式表达, 如 `pr_info` 和 `pr_debug`.
+3. 关于编译: 内核模块的编译过程不同于运行在用户空间的一般程序. 早期的内核版本需要编程者关心大量的设定, 通常在 Makefile 文件中存储. 虽然以分层级的形式进行管理, 但是仍会有重复的设定项随着时间累积在子层级的 Makefile 文件中, 变得庞大而难以维护. 幸运的是, 一种叫做 `kbuild` 的新方式可以处理这些事情, 并且可加载的外部模块的构建过程完全被集成在了基础的内核构建机制中. 关于如何构建自定义模块的详情, 可以参考 [Documentation/kbuild/modules.rst][doc-kbuild-modules-src] ([在线阅读][doc-kbuild-modules]).
+
+关于内核模块使用的 Makefile 的详细信息, 可以参考 [Documentation/kbuild/makefiles.rst][doc-kbuild-makefiles-src] ([在线阅读][doc-kbuild-makefiles])
+
+[doc-kbuild-modules-src]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/kbuild/modules.rst
+[doc-kbuild-modules]: https://www.kernel.org/doc/html/latest/kbuild/modules.html
+[doc-kbuild-makefiles-src]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/kbuild/makefiles.rst
+[doc-kbuild-makefiles]: https://www.kernel.org/doc/html/latest/kbuild/makefiles.html
+
+在早期的内核版本中, 只能使用 `init_module` 和 `cleanup_moudle` 函数, 但现如今通过使用 `module_init` 和 `module_exit` 宏定义则可以使用任意的名字. 这些宏定义在 [linux/module.h][linux-module-h] 中, 使用时需要在源代码中包含. 需要注意的是, 在调用宏之前, 函数必须被先定义, 否则将在编译时产生错误.
+
+[linux-module-h]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/linux/module.h
 
 
+```cpp
+// hello-2.c
 
-## 实验程序
+{{#include ./assets/hello/hello-2.c}}
+```
+
+## 实验过程
 
 ### 向内核中添加一个内核模块, 打印进程控制块信息, 编译模块
 
-hello.c
+[showPCB.c](./assets/showPCB/showPCB.c)
 
-Makefile
+```cpp
+{{#include ./assets/showPCB/showPCB.c}}
+```
 
+[Makefile](./assets/showPCB/Makefile)
 
-### 返回当前运行进程 (current) 或始祖进程 (init_task) 的进程控制块中的至少 30 项信息
-
- 
-
-## 实验截图及结果分析
-
-### 向内核中添加一个内核模块, 打印进程控制块信息, 编译模块
-
- 
+```
+{{#include ./assets/showPCB/Makefile}}
+```
 
 ### 加载, 卸载模块
 
- 
+![showPCB logs](./assets/showPCB-logs.png)
 
 ### 返回当前运行进程 (current) 或始祖进程 (init_task) 的进程控制块中的至少 30 项信息
 
- 
+
 
 ## 实验心得
 
@@ -113,3 +202,4 @@ Makefile
 ## 参考资料
 
 [sysprog21/lkmpg: The Linux Kernel Module Programming Guide](https://github.com/sysprog21/lkmpg)
+([在线阅读](https://sysprog21.github.io/lkmpg/))
